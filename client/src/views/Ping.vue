@@ -1,14 +1,18 @@
 <template>
-    <h3>hello {{ msg }}</h3>
+    <div>
+        <h3>hello {{ msg }}</h3>
+    </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Meta from '@/components/Meta.vue'
 export default {
     name: 'Ping',
     data(){
         return{
             msg:'',
+            metaTag: {}
         }
     },
     methods:{
@@ -26,6 +30,14 @@ export default {
     },
     created(){
         this.getMessage()
+        this.metaTag={
+        ga: $('[property="tracker:google-analytics"]').attr('content'),
+        tm: $('[property="tracker:google-tag-manager"]').attr('content'),
+        fp: $('[property="tracker:facebook-pixel"]').attr('content')
+        }
+    },
+    compontents:{
+        Meta
     }
 }
 </script>

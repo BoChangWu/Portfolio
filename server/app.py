@@ -17,7 +17,7 @@ api= Api(app)
 
 #config
 # mySQL DB   給的值 為 username:password@localhost/db_name
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+# app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}/{os.environ.get("MYSQL_DATABASE")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -74,7 +74,7 @@ class EmailCheck(Resource):
         cemail = request.json['cemail']
         company = Companys.query.filter_by(cemail=cemail).first()
         if company:
-            return('Message': 'This email already taken')
+            return{'Message': 'This email already taken'}
 
 
 class SendText(Resource):
@@ -90,6 +90,8 @@ class SendText(Resource):
         db.session.commit()
         return company_schema.jsonify(company)
 
+#add api route
+api.add_resource(SendText,'/sendtext')
 
 
 if __name__=='__main__':
