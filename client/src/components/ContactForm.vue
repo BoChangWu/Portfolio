@@ -6,8 +6,6 @@
         <br>
         <input type="text" id="phone" placeholder="phone:XX-XXXXXXXX" v-model="phone" >
         <br>
-        <input type="text" id="mobile" placeholder="mobile:09XX-XXXXXX"  v-model="mobile" >
-        <br>
         <input type="text" id="email" placeholder="XXXXXXXX@gmail.com" v-model="email" >
         <br>
         <textarea name="" id="message" cols="30" rows="10" placeholder="leave your message" v-model="message" tabIndex="5"></textarea><br>
@@ -25,7 +23,6 @@ export default {
         return{
             name:'Test',
             subject:'',
-            phone: '',
             mobile:'',
             email:'',
             message:''

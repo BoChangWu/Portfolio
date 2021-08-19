@@ -1,140 +1,96 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, jsonify
 from flask_restful import Api, Resource
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-# from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_marshmallow import Marshmallow
 import os
 from dotenv import load_dotenv
 import json
-# from connection import my_cursor
 
-# access to .env file
 load_dotenv()
 
 # create an app and add middlewares
 app = Flask(__name__)
 CORS(app)
-api = Api(app)
+api= Api(app)
 
-# config
-
+#config
+# mySQL DB   給的值 為 username:password@localhost/db_name
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{os.environ.get("MYSQL_USER")}:{os.environ.get("MYSQL_PASSWORD")}@{os.environ.get("MYSQL_HOST")}/{os.environ.get("MYSQL_DATABASE")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
-ma = Marshmallow(app)
+db= SQLAlchemy(app)
+ma= Marshmallow(app)
 
-# for password hashing
+#for password hashing
 bcrypt = Bcrypt(app)
 
-############################################
-# models
+#models
 
+class Companys(db.Model):
+    
+    __tablename__ = 'companys'
 
-class Members(db.Model):
-
-    __tablename__ = 'members'
-
-    memberid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    membername = db.Column(db.String(50))
-    memberemail = db.Column(db.String(300), unique=True, index=True)
-    memberpwd = db.Column(db.String(300))
-
-    def __init__(self, membername, memberemail, memberpwd):
-        self.membername = membername
-        self.memberemail = memberemail
-        self.memberpwd = bcrypt.generate_password_hash(memberpwd)
+    cid= db.Column(db.Integer,primary_key=True, autoincrement=True)
+    cname = db.Column(db.String(50))
+    csubject = db.Column(db.String(50))
+    cphone = db.Column(db.String(50))
+    cemail = db.Column(db.String(300),unique =True,index = True)
+    cmessage = db.Column(db.String(3000))
+    
+    def __init__(self,cname,csubject,cphone,cemail,cmessage):
+        self.cname = cname
+        self.csubject = csubject
+        self.cphone = cphone
+        self.cemail = cemail
+        self.cmessage = cmessage
 
     def __repr__(self):
-        return f'Name: {self.membername}, Email: {self.memberemail}'
+        return f'Name:{self.cname},Subject:{self.csubject},Phone: {self.cphone},Email:{self.cemail}'
+    
 
-
-############################################
-
-############################################
 # create schema
-
-
-class MembersSchema(ma.Schema):
+class CompanysSchema(ma.Schema):
     class Meta:
         fields = (
-            'memberid',
-            'membername',
-            'memberemail',
-            'memberpwd'
+            'cid',
+            'cname',
+            'csubject',
+            'cphone',
+            'cemail',
+            'cmessage'
         )
 
+company_schema = CompanysSchema()
+companys_schema = CompanysSchema(many=True)
 
-member_schema = MembersSchema()
-members_schema = MembersSchema(many=True)
-
-############################################
-
-
-############################################
 # APIs
 
 class EmailCheck(Resource):
 
     def get(self):
-        memberemail = request.json['memberemail']
-        member = Members.query.filter_by(memberemail=memberemail).first()
-        if member:
-            return {'Message': 'Member exists'}
+        cemail = request.json['cemail']
+        company = Companys.query.filter_by(cemail=cemail).first()
+        if company:
+            return('Message': 'This email already taken')
 
 
-class Login(Resource):
-    
-    def post(self):
-        memberemail = request.json['memberemail']
-        memberpwd = request.json['memberpwd']
-
-        member = Members.query.filter_by(memberemail=memberemail).first()
-        if member:
-            pwd = Members.query.filter_by(
-                memberemail=memberemail).with_entities(Members.memberpwd).first()
-            result = member_schema.dumps(pwd)
-            print(result)
-            result_json = json.loads(result)
-            password = bcrypt.check_password_hash(
-                result_json['memberpwd'], memberpwd)
-            if not password:
-                return {'Message' : 'Wrong password'}
-        else:
-            return {'Message' : 'Member does not exist'}
-
-
-class Register(Resource):
+class SendText(Resource):
 
     def post(self):
-        membername = request.json['membername']
-        memberemail = request.json['memberemail']
-        memberpwd = request.json['memberpwd']
-        member = Members(membername, memberemail, memberpwd)
-        db.session.add(member)
+        cname = request.json['cname']
+        csubject = request.json['csubject']
+        cphone = request.json['cphone']
+        cemail = request.json['cemail']
+        cmessage = request.json['cmessage']
+        company = Companys(cname,csubject,cphone,cemail,cmessage)
+        db.session.add(company)
         db.session.commit()
-        return member_schema.jsonify(member)
+        return company_schema.jsonify(company)
 
 
-class ShowMembers(Resource):
 
-    def get(self):
-        all_members = Members.query.all()
-        results = members_schema.dump(all_members)
-        return jsonify(results)
-
-
-# add api route
-api.add_resource(ShowMembers, '/showmembers')
-api.add_resource(Register, '/register')
-api.add_resource(EmailCheck, '/emailCheck')
-api.add_resource(Login, '/login')
-
-############################################
-
-
-if __name__ == '__main__':
+if __name__=='__main__':
     app.run(debug=True)
