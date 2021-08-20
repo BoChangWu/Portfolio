@@ -1,9 +1,10 @@
-from flask import Flask, jsonify
+from flask import Flask, request,jsonify
 from flask_restful import Api, Resource
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_marshmallow import Marshmallow
+
 import os
 from dotenv import load_dotenv
 import json
@@ -68,13 +69,19 @@ companys_schema = CompanysSchema(many=True)
 
 # APIs
 
-class EmailCheck(Resource):
+# class EmailCheck(Resource):
 
-    def get(self):
-        cemail = request.json['cemail']
-        company = Companys.query.filter_by(cemail=cemail).first()
-        if company:
-            return{'Message': 'This email already taken'}
+#     def get(self):
+#         cemail = request.json['cemail']
+#         company = Companys.query.filter_by(cemail=cemail).first()
+#         if company:
+#             return{'Message': 'This email already taken'}
+
+class GetMsg(Resource):
+    def get(show):
+        all_msgs= Companys.query.all()
+        results = companys_schema.dump(all_msgs)
+        return jsonify(results)
 
 
 class SendText(Resource):
@@ -92,6 +99,7 @@ class SendText(Resource):
 
 #add api route
 api.add_resource(SendText,'/sendtext')
+api.add_resource(GetMsg,'/getmsg')
 
 
 if __name__=='__main__':

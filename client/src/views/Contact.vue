@@ -1,31 +1,55 @@
 <template>
     <div id="contact">
-        <ContactForm :company="company" @send-data="dataChange" />
+        <ContactForm :cmsg="cmsg" @send-data="onSubmit" />
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 import ContactForm from '@/components/ContactForm.vue'
 export default {
     name: 'Contact',    
     data(){
-        company:{}
+        return{
+            cmsg:{
+                cname: '',
+                csubject: '',
+                cphone:'',
+                cemail:'',
+                cmessage:''
+            }
+        }
         
     },
     created(){
-        this.company={
-            name: '',
-            subject: '',
-            phone: '',
-            mobile: '',
-            email: '',
-            message: ''
-        }
+
     },
     methods:{
-        dataChange(company){
-            console.log(company)
-        }
+        sendMsg(data){
+            // console.log(addmsg)
+            const path = 'http://localhost:5000/sendtext'
+            axios.post(path,data)
+                .then(() => {
+                    console.log('sent')
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        },
+        onSubmit(){
+            
+            var smsg={
+                cname: this.cmsg.cname,
+                csubject : this.cmsg.csubject,
+                cphone : this.cmsg.cphone,
+                cemail : this.cmsg.cemail,
+                cmessage : this.cmsg.cmessage
+            }
+            // console.log(this.cmsg)
+            // console.log(smsg)
+            this.sendMsg(smsg)
+            // this.initForm()
+        },
     },
     components:{
         ContactForm

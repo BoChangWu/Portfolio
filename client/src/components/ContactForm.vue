@@ -1,35 +1,33 @@
 <template>
     <form action="" id="contact">
-        <input type="text" id="name" placeholder="姓名" v-model="name" >
+        <input type="text" id="name" placeholder="姓名" v-model="cmsg.cname" >
         <br>
-        <input type="text" id="subject" placeholder="公司" v-model="subject" >
+        <input type="text" id="subject" placeholder="公司" v-model="cmsg.csubject" >
         <br>
-        <input type="text" id="phone" placeholder="phone:XX-XXXXXXXX" v-model="phone" >
+        <input type="text" id="phone" placeholder="phone number" v-model="cmsg.cphone" >
         <br>
-        <input type="text" id="email" placeholder="XXXXXXXX@gmail.com" v-model="email" >
+        <input type="text" id="email" placeholder="XXXXXXXX@gmail.com" v-model="cmsg.cemail" >
         <br>
-        <textarea name="" id="message" cols="30" rows="10" placeholder="leave your message" v-model="message" tabIndex="5"></textarea><br>
+        <textarea name="" id="message" cols="30" rows="10" placeholder="leave your message" v-model="cmsg.cmessage" tabIndex="5"></textarea><br>
         
 
-        <button tabIndex="6">SUBMIT</button>
+        <button tabIndex="6" @click="sendData">SUBMIT</button>
     </form>
     
 </template>
 
 <script>
+
 export default {
     name:'ContactForm',
-    data(){
-        return{
-            name:'Test',
-            subject:'',
-            mobile:'',
-            email:'',
-            message:''
-        }
+    props:{
+        cmsg: Object
     },
     methods:{
-        
+        sendData(evt){
+            evt.preventDefault()
+            this.$emit('send-data',this.cmsg)
+        }
     },
     created(){
         $(document).on('keypress', 'input', function (e) {
@@ -39,6 +37,8 @@ export default {
                 $(this).next().next().focus()
             }
         })
+        // this.initForm()
+
     }
 }
 
