@@ -19,19 +19,22 @@ export default {
                 id:0,
                 name: 'stubeat',
                 img: 'stubeat.png',
+                tools:'JavaScript,Node.js,Docker,AWS,Azure',
                 link: 'http://ec2-54-254-209-235.ap-southeast-1.compute.amazonaws.com/'
             },
             {
                 id:1,
-                name: 'poker',
+                name: '104_scraping',
                 img:'',
-                link: ''
+                tools:'python,Jupyter',
+                link: 'https://github.com/BoChangWu/Job104_python_scraping.git'
             },
             {
                 id:2,
-                name: 'python',
+                name: 'zh_scraping',
                 img: '',
-                link: ''
+                tools:'python,Jupyter',
+                link: 'https://github.com/BoChangWu/zh_python_scraping.git'
             }
         ]
     },

@@ -4,7 +4,7 @@
     <router-link to="/works">Works</router-link> |
     <router-link to="/contact">Contact</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/ping">Ping</router-link>
+    <router-link to="/trylogin">TryLogin</router-link>
   </div>
   <router-view/>
 </template>

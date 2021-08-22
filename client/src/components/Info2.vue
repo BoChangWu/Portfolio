@@ -1,8 +1,6 @@
 <template>
     <div id="info2">
-        <div class="info2left">
-            <h1>left</h1>
-        </div>
+        <Mypic class="info2left" :picUrl="livePic"/>
         <BasicInfo class="info2right"/>
 
     </div>
@@ -10,26 +8,32 @@
 
 <script>
 import BasicInfo from '@/components/BasicInfo.vue'
+import Mypic from '@/components/Mypic.vue'
 export default {
     name:'Info2',
+    data(){
+        return{
+            livePic: 'Json2.jpg'
+        }
+    },
     components:{
         BasicInfo,
+        Mypic
     }
 }
 </script>
 
 <style>
 #info2{
+    background-color: #42b983;
     display: flex;
     height: 900px;
     
 }
 .info2left{
     flex: 4;
-    background-color: #42b983;
 }
 .info2right{
     flex: 6;
-    background-color: #3ca876;
 }
 </style>

@@ -26,9 +26,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "contact" */ '../views/About.vue')
   },
   {
-    path: '/ping',
-    name: 'Ping',
-    component: () => import(/* webpackChunkName: "ping" */ '../views/Ping.vue')
+    path: '/TryLogin',
+    name: 'TryLogin',
+    component: () => import(/* webpackChunkName: "ping" */ '../views/TryLogin.vue')
   }
 ]
 
