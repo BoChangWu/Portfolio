@@ -2,13 +2,13 @@
     <div id="loginform">
         <form action="">
             <div id="inputarea">
-            <input type="text" id="email" placeholder="Email">            
+            <input type="text" id="email" placeholder="Email" v-model="mdata.memail">            
             <br>
-            <input type="password" id="pwd" placeholder="Password">
+            <input type="password" id="pwd" placeholder="Password" v-model="mdata.mpwd">
             </div>
             <div id="buttonarea">
-                <button>Sign in</button>
-                <button>Sign up</button>
+                <button @click="signIn">Sign in</button>
+                <button @click="signUp">Sign up</button>
             </div>
         </form>
     </div>
@@ -17,6 +17,23 @@
 <script>
 export default {
     name: 'LoginForm',
+    props:{
+        mdata: Object,
+        newData: Object,
+        members: Array,
+        loginStatus: Boolean,
+    },
+    methods:{
+        signIn(evt){
+            evt.preventDefault()
+            this.$emit('sign-in',this.mdata)
+            this.$emit('toggle-status',this.mdata)
+        },
+        signUp(evt){
+            evt.preventDefault()
+            this.$emit('sign-up',this.newData)
+        }
+    }
 
 }
 </script>
@@ -42,7 +59,7 @@ input{
     margin: 20px;
 }
 #inputarea{
-    margin-top: 30%;
+    margin-top: 150px;
 }
 #buttonarea{
     margin-top: 30px;

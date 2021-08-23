@@ -4,11 +4,23 @@
     <router-link to="/works">Works</router-link> |
     <router-link to="/contact">Contact</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/trylogin">TryLogin</router-link>
+    <router-link to="/trylogin" >TryLogin</router-link>
+    <router-view @toggle-status="toggleStatus" /> <!--@function要在這邊下-->
   </div>
-  <router-view/>
+  
 </template>
+<script>
+  export default {
+    name: 'App',
+    methods:{
+      toggleStatus(){
+        console.log('nice')
+        this.$router.push("/")
+      }
+    }
+  }
 
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

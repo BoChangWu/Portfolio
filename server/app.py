@@ -29,6 +29,24 @@ ma= Marshmallow(app)
 bcrypt = Bcrypt(app)
 
 #models
+class Members(db.Model):
+    
+    __tablename__= 'members'
+
+    mid=db.Column(db.Integer,primary_key=True,autoincrement=True)
+    mname=db.Column(db.String(50))
+    memail=db.Column(db.String(50))
+    mpwd = db.Column(db.String(300))
+
+    def __init__(self,mname,memail,mpwd):
+        self.mname = mname
+        self.memail = memail
+        self.mpwd = bcrypt.generate_password_hash(mpwd)
+
+    def __repr__(self):
+        return f'Name:{self.mname},Email:{self.memail}'
+
+
 
 class Companys(db.Model):
     
@@ -53,6 +71,14 @@ class Companys(db.Model):
     
 
 # create schema
+class MembersSchema(ma.Schema):
+    class Meta:
+        fields = (
+            'mid',
+            'mname',
+            'memail',
+            'mpwd',
+        )
 class CompanysSchema(ma.Schema):
     class Meta:
         fields = (
@@ -64,18 +90,60 @@ class CompanysSchema(ma.Schema):
             'cmessage'
         )
 
+member_schema = MembersSchema()
+members_schema = MembersSchema(many=True)
+
 company_schema = CompanysSchema()
 companys_schema = CompanysSchema(many=True)
 
 # APIs
 
-# class EmailCheck(Resource):
+class EmailCheck(Resource):
 
-#     def get(self):
-#         cemail = request.json['cemail']
-#         company = Companys.query.filter_by(cemail=cemail).first()
-#         if company:
-#             return{'Message': 'This email already taken'}
+    def get(self):
+        memail = request.json['memail']
+        member = Members.query.filter_by(memail=memail).first()
+        if member:
+            return{'Message': 'This email already taken'}
+
+class Login(Resource):
+
+    def post(self):
+        memail = request.json['memail']
+        mpwd = request.json['mpwd']
+
+        member = Members.query.filter_by(memail=memail)
+        if member:
+            pwd = Members.query.filter_by(
+                memail=memail).with_entities(Members.mpwd)
+            result = member_schema.dumps(pwd)
+            print(result)
+            result_json = json.load(result)
+            password = bcrypt.check_password_hash(
+                result_json['mpwd'],mpwd)
+
+            if not password:
+                return {'Message': 'Wrong password'}
+            else:
+                return{'Message' : 'Member does not exist'}
+
+class Register(Resource):
+
+    def post(self):
+        mname = request.json['mname']
+        memail = request.json['memail']
+        mpwd = request.json['mpwd']
+        member = Members(mname,memail,mpwd)
+        db.session.add(member)
+        db.session.commit()
+        return member_schema.jsonify(member)
+
+class ShowMembers(Resource):
+
+    def get(self):
+        all_members = Members.query.all()
+        results = members_schema.dump(all_members)
+        return jsonify(results)        
 
 class GetMsg(Resource):
     def get(show):
@@ -100,6 +168,11 @@ class SendText(Resource):
 #add api route
 api.add_resource(SendText,'/sendtext')
 api.add_resource(GetMsg,'/getmsg')
+api.add_resource(EmailCheck,'/emailcheck')
+api.add_resource(Login,'/login')
+api.add_resource(Register,'/register')
+api.add_resource(ShowMembers,'/showmembers')
+
 
 
 if __name__=='__main__':
