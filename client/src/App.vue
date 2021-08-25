@@ -4,7 +4,8 @@
     <router-link to="/works">Works</router-link> |
     <router-link to="/contact">Contact</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/trylogin" >TryLogin</router-link>
+    <!-- <router-link to="/trylogin" >Try Login</router-link> | -->
+    <router-link to="/signup" >Sign Up</router-link>
     <router-view @toggle-status="toggleStatus" /> <!--@function要在這邊下-->
   </div>
   

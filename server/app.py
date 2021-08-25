@@ -12,8 +12,6 @@ import json
 
 load_dotenv()
 
-
-
 # create an app and add middlewares
 app = Flask(__name__)
 CORS(app)
@@ -109,26 +107,25 @@ class EmailCheck(Resource):
         if member:
             return{'Message': 'This email already taken'}
 
-class Login(Resource):
+# class Login(Resource):
 
-    def post(self):
-        memail = request.json['memail']
-        mpwd = request.json['mpwd']
+#     def post(self):
+#         memail = request.json['memail']
+#         mpwd = request.json['mpwd']
 
-        member = Members.query.filter_by(memail=memail)
-        if member:
-            pwd = Members.query.filter_by(
-                memail=memail).with_entities(Members.mpwd)
-            result = member_schema.dumps(pwd)
-            print(result)
-            result_json = json.load(result)
-            password = bcrypt.check_password_hash(
-                result_json['mpwd'],mpwd)
+#         member = Members.query.filter_by(memail=memail)
+#         if member:
+#             pwd = Members.query.filter_by(
+#                 memail=memail).with_entities(Members.mpwd)
+#             result = member_schema.dumps(pwd)
+#             print(result)
+#             result_json = json.load(result)
+#             password = bcrypt.check_password_hash(result_json['mpwd'],mpwd)
 
-            if not password:
-                return {'Message': 'Wrong password'}
-            else:
-                return{'Message' : 'Member does not exist'}
+#             if not password:
+#                 return {'Message': 'Wrong password'}
+#             else:
+#                 return{'Message' : 'Member does not exist'}
 
 class Register(Resource):
 
@@ -165,7 +162,9 @@ lo_uri = 'http://127.0.0.1:5000/lotify'
 class SendText(Resource):
 
     def post(self):
-        
+        response_object={
+            "message": '',
+        }
         cname = request.json['cname']
         csubject = request.json['csubject']
         cphone = request.json['cphone']
@@ -190,7 +189,7 @@ class SendText(Resource):
 api.add_resource(SendText,'/sendtext')
 api.add_resource(GetMsg,'/getmsg')
 api.add_resource(EmailCheck,'/emailcheck')
-api.add_resource(Login,'/login')
+# api.add_resource(Login,'/login')
 api.add_resource(Register,'/register')
 api.add_resource(ShowMembers,'/showmembers')
 

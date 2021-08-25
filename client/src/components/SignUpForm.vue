@@ -1,14 +1,15 @@
 <template>
-    <div id="loginform">
+    <div id="signup">
         <form action="">
             <div id="inputarea">
-            <input type="text" id="email" placeholder="Email" v-model="mdata.memail">            
+            <input type="text" id="name" placeholder="Name" v-model="mname"> 
             <br>
-            <input type="password" id="pwd" placeholder="Password" v-model="mdata.mpwd">
+            <input type="text" id="email" placeholder="Email" v-model="memail">            
+            <br>
+            <input type="password" id="pwd" placeholder="Password" v-model="mpwd">
             </div>
             <div id="buttonarea">
-                <button @click="signIn">Sign in</button>
-                <button @click="signUp">Sign up</button>
+                <button @click="registerGo">Sign up</button>
             </div>
         </form>
     </div>
@@ -16,30 +17,29 @@
 
 <script>
 export default {
-    name: 'LoginForm',
+    name:'SignUpForm',
     props:{
-        mdata: Object,
-        newData: Object,
-        members: Array,
-        loginStatus: Boolean,
+        mname: String,
+        memail: String,
+        mpwd: String
     },
     methods:{
-        signIn(evt){
+        registerGo(evt){
             evt.preventDefault()
-            this.$emit('sign-in',this.mdata)
-            
-        },
-        signUp(evt){
-            evt.preventDefault()
-            this.$emit('sign-up',this.newData)
+            const mdata = {
+                mname: this.mname,
+                memail: this.memail,
+                mpwd: this.mpwd
+            }
+            this.$emit('register-go', mdata)
         }
     }
-
 }
 </script>
 
 <style scoped>
-#loginform{
+#signup{
+    margin-top: 100px;
     display: flex;
     align-items: center;
     justify-content: center;

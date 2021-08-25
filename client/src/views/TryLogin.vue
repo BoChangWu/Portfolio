@@ -1,11 +1,12 @@
 <template>
     <div id="trylogin">
         <h2>This page is just show you how I connect frontend with Server and DataBase</h2>
-        <LoginForm class="login" @sign-in="hideLogin" @toggle-status="$emit('toggle-status')" @sign-up="register" :mdata="member" />
+        <LoginForm class="login" @sign-in="tryLogin"  @sign-up="register" :mdata="member" />
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 import LoginForm from '@/components/LoginForm.vue'
 export default {
     name:'TryLogin',
