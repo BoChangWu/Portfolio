@@ -32,6 +32,9 @@ export default {
         margin-top: 50px;
     }
     .portfoCard{
+        /* margin: auto; */
+        /* text-align: center; */
+        /* width: 70%; */
         background-color: #dbffed;
         margin: 30px;
         letter-spacing: 8px;

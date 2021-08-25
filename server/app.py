@@ -4,12 +4,15 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_marshmallow import Marshmallow
+from lotify.client import Client
 
 import os
 from dotenv import load_dotenv
 import json
 
 load_dotenv()
+
+
 
 # create an app and add middlewares
 app = Flask(__name__)
@@ -152,9 +155,17 @@ class GetMsg(Resource):
         return jsonify(results)
 
 
+#line notify
+user_token = '7nE57TPaLZYdzKz5KR1cVFcR1YxchFvBXo4Ypkm7XQ1'
+client_id = 'QTIJkTFC5nX2SBU0fCUAMi'
+client_secret = 'HHf9wfwQv4NDCxjdaWkOfuFGa6wGUhC9DrDdvGf9Pxc'
+lo_uri = 'http://127.0.0.1:5000/lotify'
+
+
 class SendText(Resource):
 
     def post(self):
+        
         cname = request.json['cname']
         csubject = request.json['csubject']
         cphone = request.json['cphone']
@@ -163,6 +174,16 @@ class SendText(Resource):
         company = Companys(cname,csubject,cphone,cemail,cmessage)
         db.session.add(company)
         db.session.commit()
+
+        MESSAGE= f'hello, I am {cname},from {csubject},heres my phone:{cphone} and email: {cemail},I wanna say {cmessage}'
+
+        lotify = Client(client_id=client_id,
+        client_secret=client_secret, redirect_uri=lo_uri)
+        status = lotify.status(access_token=user_token)
+
+        if status['status'] == 200:
+            response = lotify.send_message(access_token=user_token, message=MESSAGE)
+        response_object['message'] = 'Message sent!'
         return company_schema.jsonify(company)
 
 #add api route
